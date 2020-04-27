@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.ArticleMapper">
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		INSERT
+		INTO articles(name, url) VALUES(#{name}, #{url})
+	</insert>
+	<select id="findAll" resultType="com.example.domain.Article">
+		SELECT id, name, url FROM
+		articles ORDER BY id
+	</select>
+	<delete id="deleteById" parameterType="int">
+		DELETE FROM articles WHERE
+		id=#{id}
+	</delete>
+<!-- 	<select id="findAllWithCategory" resultMap="articleResultMap">
+		SELECT a.id a_id,
+		a.name a_name, a.url a_url, sc.id sc_id, sc.id sc_id, sc.article_id
+		sc_article_id, sc.category_id sc_category_id, c.id c_id, c.name c_name
+		FROM
+		articles AS a LEFT OUTER JOIN selected_category AS sc LEFT
+		OUTER
+		JOIN
+		category AS c ON sc.category_id = c.id ON a.id =
+		sc.article_id
+		ORDER BY
+		a.id
+	</select> -->
+	<resultMap type="com.example.domain.Article"
+		id="articleResultMap">
+	<!-- 	<constructor>
+			<idArg column="a_id" javaType="int" />
+			<arg column="a_name" javaType="String" name="name" />
+			<arg column="a_url" javaType="String" name="url" />
+		</constructor> -->
+		<id column="a_id" property="id" />
+		<result column="a_name" property="name" />
+		<result column="a_url" property="url" />
+		<collection property="selectedCategoryList"
+			ofType="com.example.domain.SelectedCategory">
+			<id column="sc_id" property="id" />
+			<result column="sc_category_id" property="categoryId" />
+			<result column="sc_article_id" property="articleId" />
+			<association property="category"
+				javaType="com.example.domain.Category">
+				<id column="c_id" property="id" />
+				<result column="c_name" property="name" />
+			</association>
+		</collection>
+	</resultMap>
+</mapper>
